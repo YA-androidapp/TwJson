@@ -4,18 +4,12 @@
 # install.packages('jsonlite')
 # install.packages("quanteda") #テキスト分析
 # # または install.packages("devtools"); devtools::install_github("kbenoit/quanteda")
-<<<<<<< HEAD
-
-library(jsonlite)
-library(quanteda)
-=======
 # install.packages('igraph') # 共起ネットワーク分析
 # install.packages('RCurl')
 library(jsonlite)
 library(quanteda)
 library(RCurl)
 library(igraph)
->>>>>>> e7e578281cd482863b917271f9ed1c7ba17b397c
 
 # JSONファイル群を読み込む
 readJsons <- function() {
@@ -25,24 +19,15 @@ readJsons <- function() {
   # JSONファイル一覧を取得する
   files <- list.files()
   files.json <- grep('[0-9]{,4}_[0-9]{,2}\\.js$', files)
-<<<<<<< HEAD
-
-  # JSONファイルごと
-=======
   files.jsontxt <- grep('[0-9]{,4}_[0-9]{,2}\\.js.txt$', files)
   file.remove(files[files.jsontxt])
 
   # JSONファイルごとに処理する
->>>>>>> e7e578281cd482863b917271f9ed1c7ba17b397c
   for (fi in 1:length(files.json)) {
     orifile = files[files.json[fi]]
     tmpfile = sub('.js', ".js.txt", orifile) # paste('_', orifile, sep = '')
 
     f = file(orifile, 'r')
-<<<<<<< HEAD
-    file.remove(tmpfile)
-=======
->>>>>>> e7e578281cd482863b917271f9ed1c7ba17b397c
 
     # 各ファイル内の文字列処理を行う
     i = 0
@@ -70,38 +55,6 @@ readJsons <- function() {
   return( result )
 }
 readdata <- readJsons()
-<<<<<<< HEAD
-
-
-
-getStatuses <- function(readdata) {
-  # 初期化する
-  result <- data.frame(
-                       created_at = NULL,
-                       id_str = item$id_str,
-                       screen_name = item$user$screen_name,
-                       source = item$source,
-                       text = item$text,
-                       username = item$user$name
-  )
-
-  for (item in readdata) {
-    current <- data.frame(
-      created_at = as.POSIXlt(item$created_at, "JST"),
-      id_str = item$id_str,
-      screen_name = item$user$screen_name,
-      source = item$source,
-      text = item$text,
-      username = item$user$name
-    )
-    result <- merge(
-      result,
-      transform(current, name=levels(name)[name]),
-      all = T
-      )
-  }
-
-=======
 
 
 # JSONファイルの内容をDataFrameへ格納する
@@ -132,44 +85,10 @@ getStatuses <- function(readdata) {
     username = f_username,
     stringsAsFactors=FALSE
   )
->>>>>>> e7e578281cd482863b917271f9ed1c7ba17b397c
   return( result )
 }
 statuses <- getStatuses(readdata)
 
-<<<<<<< HEAD
-
-
-
-
-
-#as.POSIXct(tweet_df$created_at, format = "%a %b %d %H:%M:%S +0000 %Y") + (9 * 3600),
-
-statuses <- merge(
-  data.frame(
-    created_at = Sys.time() - 600,
-    id_str = 'id_str',
-    screen_name = 'screen_name',
-    source = 'source',
-    text = 'text',
-    username = 'username'
-    ),
-  data.frame(
-    created_at = Sys.time(),
-    id_str = 'id_str2',
-    screen_name = 'screen_name',
-    source = 'source2',
-    text = 'text2',
-    username = 'username2'
-  ),
-  all = T
-  )
-statuses <- transform(statuses, text=levels(text)[text])
-
-statuses<-lapply(statuses[2:ncol(statuses)],as.character)
-str(statuses)
-
-=======
 head(statuses) # データフレームの確認
 str(statuses)  # 文字型が因子型として扱われていないことを確認する
 
@@ -180,17 +99,12 @@ str(statuses)  # 文字型が因子型として扱われていないことを確
 # 特徴語抽出
 
 # 制約条件を加える
->>>>>>> e7e578281cd482863b917271f9ed1c7ba17b397c
 getTopFeatures <- function(dfm, len = 2, cnt = 2) {
   # 最低文字長
   result <- dfm_select(dfm, min_nchar = len)
 
   # 文字種
-<<<<<<< HEAD
-  result <- dfm_remove(result, '^[ぁ-ん]+$', valuetype = 'regex')
-=======
   # result <- dfm_remove(result, '^[ぁ-ん]+$', valuetype = 'regex')
->>>>>>> e7e578281cd482863b917271f9ed1c7ba17b397c
 
   # 頻度
   result <- dfm_trim(result, min_count = cnt)
@@ -201,37 +115,21 @@ getDfm <- function(statuses) {
   # コーパスオブジェクトを生成
   quanteda.corpus <- corpus(statuses, text_field = 'text')
   ndoc(quanteda.corpus)
-<<<<<<< HEAD
-  summary(quanteda.corpus, n = 1)
-  head(corp)
-  head(docvars(corp))
-
-  #
-=======
   head(quanteda.corpus)
   head(docvars(quanteda.corpus))
->>>>>>> e7e578281cd482863b917271f9ed1c7ba17b397c
 
   texts(quanteda.corpus)[[1]]
 
   table(docvars(quanteda.corpus, 'source'))
 
-<<<<<<< HEAD
-  quanteda.corpus.web <- corpus_subset(quanteda.corpus, source == 'Web')
-=======
   quanteda.corpus.web <- corpus_subset(quanteda.corpus, grepl('Twitter Web Client', source))
->>>>>>> e7e578281cd482863b917271f9ed1c7ba17b397c
   ndoc(quanteda.corpus.web)
 
   table(weekdays(docvars(quanteda.corpus, 'created_at')))
 
   quanteda.corpus.ssv <- corpus_segment(quanteda.corpus, what = "other", delimiter = " ")
   ndoc(quanteda.corpus.ssv)
-<<<<<<< HEAD
-  head(texts(quanteda.corpus.ssv))
-=======
   texts(quanteda.corpus.ssv)
->>>>>>> e7e578281cd482863b917271f9ed1c7ba17b397c
 
 
 
@@ -247,13 +145,8 @@ getDfm <- function(statuses) {
   quanteda.tokens.selected <- tokens_remove(quanteda.tokens, '^[0-9a-zA-Z]+$', valuetype = 'regex', padding = TRUE)
 
   quanteda.tokens.kwic <- kwic(quanteda.tokens, "RT") # KWIC索引の生成
-<<<<<<< HEAD
-  quanteda.tokens.ngram <- tokens_ngrams(quanteda.tokens, n = 2)
-  head(quanteda.tokens.kwic)
-=======
   head(quanteda.tokens.kwic)
   quanteda.tokens.ngram <- tokens_ngrams(quanteda.tokens, n = 2) # トークンからn-gramを作成
->>>>>>> e7e578281cd482863b917271f9ed1c7ba17b397c
   head(quanteda.tokens.ngram[[1]])
 
   # 共起語を結合
@@ -262,18 +155,6 @@ getDfm <- function(statuses) {
     'bj',
     features = '^[０-９ァ-ヶー一-龠]+$',
     valuetype = 'regex',
-<<<<<<< HEAD
-    min_count = 10,
-    nested = FALSE
-    )
-  quanteda.tokens.compound <- tokens_compound(
-    quanteda.tokens,
-    quanteda.tokens.collocations[quanteda.tokens.collocations$p < 0.01,],
-    valuetype = 'fixed',
-    concatenator = '',
-    join = TRUE
-    )
-=======
     min_count = 1,
     nested = FALSE
     )
@@ -284,7 +165,6 @@ getDfm <- function(statuses) {
   #   concatenator = '',
   #   join = TRUE
   #   )
->>>>>>> e7e578281cd482863b917271f9ed1c7ba17b397c
 
 
 
@@ -300,29 +180,16 @@ getDfm <- function(statuses) {
 
 <<<<<<< HEAD
 
-  return( result )
+  return( list(tokens=quanteda.tokens, dfm=quanteda.dfm) )
 }
-dfm <- getDfm(statuses)
+quanteda.tokens <- getDfm(statuses)$tokens
+quanteda.dfm <- getDfm(statuses)$dfm
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# ワードクラウド
+textplot_wordcloud(quanteda.dfm, comparison = FALSE)
+textplot_wordcloud(quanteda.dfm, random.color = TRUE, rot.per = .25, colors = sample(colors()[2:128], 5))
 
 
 
@@ -352,16 +219,12 @@ quanteda.dfm.1 <- dfm_select(quanteda.dfm.1, documents = unique(names(quanteda.t
 quanteda.dfm.1 <- quanteda.dfm.1[order(docnames(quanteda.dfm.1)),] # 日にちで並べ替え
 plot((quanteda.dfm.1[,'positive'] - quanteda.dfm.1[,'negative']) / wordage, type = 'l')
 
-
-
 quanteda.tokens.2 <- as.tokens(kwic(quanteda.tokens, words[2]))
 quanteda.dfm.2 <- dfm(quanteda.tokens.2, dictionary = dict)
 quanteda.dfm.2 <- dfm_compress(quanteda.dfm.2) # 日ごとに集計
 quanteda.dfm.2 <- dfm_select(quanteda.dfm.2, documents = unique(names(quanteda.tokens)), valuetype = 'fixed', padding = TRUE) # 日付を補完
 quanteda.dfm.2 <- mx_clinton[order(docnames(quanteda.dfm.2)),] # 日にちで並べ替え
 plot((quanteda.dfm.2[,'positive'] - quanteda.dfm.2[,'negative']) / wordage , type = 'l')
-
-
 
 plot((quanteda.dfm.1[,'positive'] - quanteda.dfm.1[,'negative']) / wordage, type = 'l',
     xaxt = 'n', ylab = 'ポジティブ・ネガティブ比', xlab = '時間')
@@ -372,16 +235,11 @@ legend('topleft', col = c('black', 'red'), legend = words, lty = 1)
 
 
 
-
-
 # トピックモデル
 require(topicmodels)
 
 quanteda.dfm.lda <- LDA(convert(quanteda.dfm, to = "topicmodels"), k = 20)
 get_terms(quanteda.dfm.lda, 10)
-
-
-
 
 
 
@@ -426,51 +284,6 @@ plot(
   vertex.size = 20
   )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-=======
-  return( list(tokens=quanteda.tokens, dfm=quanteda.dfm) )
-}
-quanteda.tokens <- getDfm(statuses)$tokens
-quanteda.dfm <- getDfm(statuses)$dfm
-
-
-
-# ワードクラウド
-textplot_wordcloud(quanteda.dfm, comparison = FALSE)
-textplot_wordcloud(quanteda.dfm, random.color = TRUE, rot.per = .25, colors = sample(colors()[2:128], 5))
->>>>>>> e7e578281cd482863b917271f9ed1c7ba17b397c
 
 
 # 相対頻度分析
