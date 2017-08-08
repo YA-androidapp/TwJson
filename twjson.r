@@ -178,8 +178,6 @@ getDfm <- function(statuses) {
   # 特長語の選択
   getTopFeatures(quanteda.dfm, 2, 2)
 
-<<<<<<< HEAD
-
   return( list(tokens=quanteda.tokens, dfm=quanteda.dfm) )
 }
 quanteda.tokens <- getDfm(statuses)$tokens
